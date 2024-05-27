@@ -1,0 +1,87 @@
+post:
+  operationId: "getHeaderWithInclusionList"
+  summary: Get an execution payload header with the specified inclusion list.
+  description: |
+    Requests a builder node to produce a valid execution payload header with the specified inclusion list, which
+    can be integrated into a blinded beacon block and signed.
+
+    If the builder is unable to produce a valid execution payload header, then
+    the builder MUST return a 204 response. If the request is invalid, then the
+    builder MUST return an error response (400) with a description of the
+    validation failure.
+
+    After Deneb, return the KZG commitments for any associated blobs attached to the execution payload.
+  tags:
+    - Builder
+  parameters:
+    - name: slot
+      in: path
+      required: true
+      description: The slot for which the block should be proposed.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Uint64"
+    - name: parent_hash
+      in: path
+      required: true
+      description: Hash of execution layer block the proposer will build on.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Root"
+    - name: pubkey
+      in: path
+      required: true
+      description: The validator's BLS public key.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Pubkey"
+  requestBody:
+    description: A `InclusionList`.
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: "../../builder-oapi.yaml#/components/schemas/Poc.InclusionList"
+        examples:
+          poc:
+            $ref: "../../builder-oapi.yaml#/components/examples/Poc.InclusionList"
+  responses:
+    "200":
+      description: Success response.
+      content:
+        application/json:
+          schema:
+            title: GetHeaderWithInclusionListResponse
+            type: object
+            required: [version, data]
+            properties:
+              version:
+                type: string
+                enum: [ bellatrix, capella, deneb, poc]
+                example: "bellatrix"
+              data:
+                oneOf:
+                 - $ref: "../../builder-oapi.yaml#/components/schemas/Bellatrix.SignedBuilderBid"
+                 - $ref: "../../builder-oapi.yaml#/components/schemas/Capella.SignedBuilderBid"
+                 - $ref: "../../builder-oapi.yaml#/components/schemas/Deneb.SignedBuilderBid"
+          examples:
+            bellatrix:
+              $ref: "../../builder-oapi.yaml#/components/examples/Bellatrix.SignedBuilderBid"
+            capella:
+              $ref: "../../builder-oapi.yaml#/components/examples/Capella.SignedBuilderBid"
+            deneb:
+              $ref: "../../builder-oapi.yaml#/components/examples/Deneb.SignedBuilderBid"
+
+    "204":
+      description: No header is available.
+    "400":
+      description: Error response.
+      content:
+        application/json:
+          schema:
+            $ref: "../../builder-oapi.yaml#/components/schemas/ErrorMessage"
+          examples:
+            InvalidRequest:
+              value:
+                code: 400
+                message: "Unknown hash: missing parent hash"
+    "500":
+      $ref: "../../builder-oapi.yaml#/components/responses/InternalError"

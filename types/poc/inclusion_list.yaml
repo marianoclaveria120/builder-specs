@@ -1,0 +1,12 @@
+poc:
+  InclusionList:
+    type: object
+    description: "A wrapper object containing the list of transaction to be included in a block"
+    required: [transactions]
+    properties:
+      transactions:
+        type: array
+        items:
+          $ref: "../../beacon-apis/types/primitive.yaml#/Transaction"
+        minItems: 0
+        maxItems: 1048576
