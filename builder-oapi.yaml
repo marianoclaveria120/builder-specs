@@ -46,8 +46,8 @@ paths:
     $ref: "./apis/builder/blinded_blocks.yaml"
   /eth/v1/builder/status:
     $ref: "./apis/builder/status.yaml"
-  /eth/v1/builder/header_with_inclusion_list/{slot}/{parent_hash}/{pubkey}:
-    $ref: "./apis/builder/header_with_inclusion_list.yaml"
+  /eth/v1/builder/send_inclusion_list/{slot}/{parent_hash}/{pubkey}:
+    $ref: "./apis/builder/send_inclusion_list.yaml"
 components:
   schemas:
     Uint64:
