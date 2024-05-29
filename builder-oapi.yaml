@@ -46,7 +46,8 @@ paths:
     $ref: "./apis/builder/blinded_blocks.yaml"
   /eth/v1/builder/status:
     $ref: "./apis/builder/status.yaml"
-
+  /eth/v1/builder/send_inclusion_list/{slot}/{parent_hash}/{pubkey}:
+    $ref: "./apis/builder/send_inclusion_list.yaml"
 components:
   schemas:
     Uint64:
@@ -77,6 +78,8 @@ components:
       $ref: "./types/deneb/execution_payload_and_blobs_bundle.yaml#/Deneb/ExecutionPayloadAndBlobsBundle"
     SignedValidatorRegistration:
       $ref: "./beacon-apis/types/registration.yaml#/SignedValidatorRegistration"
+    Poc.InclusionList:
+      $ref: "./types/poc/inclusion_list.yaml#/poc/InclusionList"
 
   responses:
     InternalError:
@@ -101,3 +104,6 @@ components:
       $ref: "./examples/deneb/execution_payload_and_blobs_bundle.json"
     Deneb.SignedBuilderBid:
       $ref: "./examples/deneb/signed_builder_bid.json"
+    Poc.InclusionList:
+      $ref: "./examples/poc/inclusion_list.json"
+

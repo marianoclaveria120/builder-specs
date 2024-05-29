@@ -1,0 +1,62 @@
+post:
+  operationId: "sendInclusionList"
+  summary: Send the specified inclusion list.
+  description: |
+    Requests a builder node to include the specified inclusion list, which
+    can be integrated into a blinded beacon block and signed.
+
+    If the builder is able to receive a valid inclusion list, then
+    the builder MUST return a 200 response. If the request is invalid, then the
+    builder MUST return an error response (400) with a description of the
+    validation failure.
+  tags:
+    - Builder
+  parameters:
+    - name: slot
+      in: path
+      required: true
+      description: The slot for which the inclusion list should be included.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Uint64"
+    - name: parent_hash
+      in: path
+      required: true
+      description: Hash of execution layer block the proposer will build on.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Root"
+    - name: pubkey
+      in: path
+      required: true
+      description: The validator's BLS public key.
+      schema:
+        $ref: "../../builder-oapi.yaml#/components/schemas/Pubkey"
+  requestBody:
+    description: A `InclusionList`.
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: "../../builder-oapi.yaml#/components/schemas/Poc.InclusionList"
+        examples:
+          poc:
+            $ref: "../../builder-oapi.yaml#/components/examples/Poc.InclusionList"
+  responses:
+    "200":
+      description: Success response.
+    "400":
+      description: Error response.
+      content:
+        application/json:
+          schema:
+            $ref: "../../builder-oapi.yaml#/components/schemas/ErrorMessage"
+          examples:
+            InvalidRequest:
+              value:
+                code: 400
+                message: "Invalid inclusion list"
+    "500":
+      $ref: "../../builder-oapi.yaml#/components/responses/InternalError"
+
+
+
